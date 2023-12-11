@@ -71,7 +71,7 @@ app.post('/login', async (req, res) => {
     }
 
       // Si las credenciales son válidas, emite un token JWT
-      const token = jwt.sign({ codigo_usuario }, process.env.JWT_SECRET || 'defaultSecretKey', { expiresIn: '1h' });
+      const token = jwt.sign({ codigo_usuario }, process.env.JWT_SECRET || 'defaultSecretKey', { expiresIn: '24h' });
       res.json({ token });
 
   } catch (error) {
