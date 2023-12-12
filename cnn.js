@@ -9,6 +9,11 @@ const port = 3000;
 
 const app = express();
 
+//Hola mundo en el servidor de bienvenida 
+app.get('/', (req, res) => {
+  res.send(`Hola mundo es una API de Login`);
+});
+
 app.use(passport.initialize());
 
 app.use("/auth", loginRouter);
