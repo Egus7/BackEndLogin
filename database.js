@@ -1,16 +1,17 @@
-const { Client } = require('pg');
-const fs = require('fs');
+import pkg from 'pg';
+const { Client } = pkg;
+//import { fs } from "fs";
 
 
 const client = new Client ({
-    host: "serverutnback.postgres.database.azure.com",
-    user: "backutn",
-    password: "$erver2023",
-    database: "sistema_ventas",
-    port: 5432,
-    ssl: {
+    host: "localhost",
+    user: "postgres",
+    password: "erigust1009",
+    database: "login",
+    port: 5432
+    /*ssl: {
         ca: fs.readFileSync("DigiCertGlobalRootCA.crt (1).pem")
-    }
+    }*/
 });
 
 
@@ -23,5 +24,6 @@ client.connect()
     console.error('Error al conectar a la bdd', err);
     client.end();
   });
-
-  module.exports = {client};
+  
+export { client};
+  
