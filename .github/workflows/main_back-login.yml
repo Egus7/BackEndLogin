@@ -1,7 +1,7 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# Docs for the Azure Web Apps Deploy action: https://github.com/azure/functions-action
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - back-login
+name: Build and deploy Node.js project to Azure Function App - back-login
 
 on:
   push:
@@ -9,54 +9,36 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
+  NODE_VERSION: '18.x' # set this to the node version to use (supports 8.x, 10.x, 12.x)
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
+  build-and-deploy:
+    runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js version
+      - name: Setup Node ${{ env.NODE_VERSION }} Environment
         uses: actions/setup-node@v3
         with:
-          node-version: '20.x'
+          node-version: ${{ env.NODE_VERSION }}
 
-      - name: npm install, build, and test
+      - name: 'Resolve Project Dependencies Using Npm'
+        shell: pwsh
         run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           npm install
           npm run build --if-present
           npm run test --if-present
+          popd
 
-      - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
-
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v3
-        with:
-          name: node-app
-          path: release.zip
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v3
-        with:
-          name: node-app
-
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
-      
-      - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
+      - name: 'Run Azure Functions Action'
+        uses: Azure/functions-action@v1
+        id: fa
         with:
           app-name: 'back-login'
           slot-name: 'Production'
-          package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E3CBA425277543899C9BBFCC308EB29D }}
+          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_08A6ADB243C54BB9BDCF50819EBC67B8 }}
