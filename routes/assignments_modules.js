@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getAssignmentsModules, getAssignmentsModulesByID, 
+import { getAssignmentsModules, getAssignmentsModulesByID, getAssignmentsModulesByUserID,
         createAssignmentsModules, deleteAssignmentsModulesByID } from '../controllers/assignments_modules.controller.js';
 
 const assignments_modulesRouter = Router();
@@ -59,6 +59,36 @@ assignments_modulesRouter.get('/', getAssignmentsModules);
  *                     type: object
  */
 assignments_modulesRouter.get('/:id', getAssignmentsModulesByID);
+/**
+ * @openapi
+ * /utnbackend/v1/assignments_modules/users/{id}:
+ *   get:
+ *     tags:
+ *       - Assignments Modules
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: User ID of the assignment module to search
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: OK
+ *                 data:
+ *                   type: array 
+ *                   items: 
+ *                     type: object
+ */
+assignments_modulesRouter.get('/users/:id', getAssignmentsModulesByUserID);
 /**
  * @openapi
  * /utnbackend/v1/assignments_modules:

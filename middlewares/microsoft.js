@@ -44,7 +44,6 @@ passport.deserializeUser(async function (id, done) {
     }
 });
 
-  
 
 passport.use(
     "auth-microsoft",

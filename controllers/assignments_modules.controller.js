@@ -32,6 +32,23 @@ const getAssignmentsModulesByID = async (req, res) => {
     }
 };
 
+const getAssignmentsModulesByUserID = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const result = await client.query(`
+            SELECT u.user_full_name, r.rol_name, m.module_name
+            FROM assignments_modules AS am
+            INNER JOIN roles AS r ON am.rol_id = r.rol_id
+            INNER JOIN modules AS m ON am.module_id = m.module_id
+            INNER JOIN users AS u ON am.user_id = u.user_id 
+            WHERE am.user_id = '${id}'`);
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error('Error al obtener una asignacion de modulo', error);
+        res.status(400).json({error: 'Error getting module assignments by user_id' });
+    }
+};
+
 const createAssignmentsModules = async (req, res) => {
     const { rol_id, module_id, user_id } = req.body;
 
@@ -83,4 +100,5 @@ const deleteAssignmentsModulesByID = async (req, res) => {
         res.status(500).json({error: 'Internal Server Error' });
     }
 };
-export { getAssignmentsModules, getAssignmentsModulesByID, createAssignmentsModules, deleteAssignmentsModulesByID };
+export { getAssignmentsModules, getAssignmentsModulesByID, 
+         getAssignmentsModulesByUserID, createAssignmentsModules, deleteAssignmentsModulesByID };
