@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { createUser, getUsers, getUsersByID, updateUser, updateUser_State } from '../controllers/usersController.js';
+import { authorize } from '../middlewares/verifyAccess.js';
 
 const usersRouter = Router();
 //Routes Users:

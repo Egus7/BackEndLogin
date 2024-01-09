@@ -49,16 +49,16 @@ const app = express();
   //swagger
   V1SwaggerDocs(app, port);
 
-  app.use('/utnbackend/v1/users', usersRouter);
-  app.use('/utnbackend/v1/roles', rolesRouter);
-  app.use('/utnbackend/v1/modules', modulesRouter);
-  app.use('/utnbackend/v1/assignments_modules', assignments_modulesRouter);
-  app.use('/utnbackend/v1/events', eventsRouter);
-  app.use('/utnbackend/v1/assignments_events', assignments_eventsRouter);
-  app.use('/utnbackend/v1/classroom', classroomRouter);
-  app.use('/utnbackend/v1/assignments_class', assignments_classRouter);
-  app.use('/utnbackend/v1/class_score', class_scoreRouter);
-  app.use('/utnbackend/v1/auditing', auditingRouter);
+  app.use('/utnbackend/v1/users', authorize(['Administrador'], ['Usuarios']), usersRouter);
+  app.use('/utnbackend/v1/roles', authorize(['Administrador'], ['Roles']), rolesRouter);
+  app.use('/utnbackend/v1/modules', authorize(['Administrador'], ['Modulos']), modulesRouter);
+  app.use('/utnbackend/v1/assignments_modules', authorize(['Administrador'], ['Asignacion de Modulos']), assignments_modulesRouter);
+  app.use('/utnbackend/v1/events', authorize(['Administrador', 'Estudiante', 'Profesor', 'Secretaria'], ['Eventos']), eventsRouter);
+  app.use('/utnbackend/v1/assignments_events', authorize(['Administrador', 'Estudiante', 'Profesor'], ['Asignacion de Eventos']), assignments_eventsRouter);
+  app.use('/utnbackend/v1/classroom', authorize(['Administrador', 'Estudiante', 'Profesor'], ['Clases']), classroomRouter);
+  app.use('/utnbackend/v1/assignments_class', authorize(['Administrador', 'Estudiante', 'Profesor'], ['Asignacion de Clases']), assignments_classRouter);
+  app.use('/utnbackend/v1/class_score', authorize(['Administrador', 'Estudiante', 'Profesor', 'Secretaria'], ['Notas']), class_scoreRouter);
+  app.use('/utnbackend/v1/auditing', authorize(['Administrador'], ['Auditoria']), auditingRouter);
   //app.use('/utnbackend/v1/assignments_modules', authorize(['Administrador'], ['Assignments_Modules']), assignments_modulesRouter);
 
   app.listen(port, () => {

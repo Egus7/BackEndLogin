@@ -100,5 +100,8 @@ const deleteAssignmentsModulesByID = async (req, res) => {
         res.status(500).json({error: 'Internal Server Error' });
     }
 };
+
+
 export { getAssignmentsModules, getAssignmentsModulesByID, 
-         getAssignmentsModulesByUserID, createAssignmentsModules, deleteAssignmentsModulesByID };
+         getAssignmentsModulesByUserID, createAssignmentsModules, 
+         deleteAssignmentsModulesByID};

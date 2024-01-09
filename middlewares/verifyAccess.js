@@ -4,16 +4,18 @@ const authorize = (roles, modules) => {
 
         // Verificar si el usuario está autenticado
         if (!req.isAuthenticated()) {
-            return res.status(401).json({ error: 'No autenticado' });
+            return res.status(401).json({ error: 'Not authenticated' });
         }
 
         // Verificar si req.user y req.user.roles están definidos
         if (!req.user || !req.user.roles || !req.user.modules) {
-            return res.status(403).json({ error: 'Acceso no autorizado' });
+            return res.status(403).json({ error: 'Unauthorized access' });
         }
 
         const userRoles = req.user.roles || [];
         const userModules = req.user.modules || [];
+        console.log('roles: ', userRoles);
+        console.log('modulos: ', userModules);
 
         // Verifica si el usuario tiene al menos uno de los roles requeridos
         const hasRequiredRoles = roles.some(role => userRoles.includes(role));
@@ -24,7 +26,7 @@ const authorize = (roles, modules) => {
         if (hasRequiredRoles && hasRequiredModules) {
             next(); // Usuario autorizado, permite el acceso a la ruta
         } else {
-            res.status(403).json({ error: 'Acceso no autorizado' });
+            res.status(403).json({ error: 'Unauthorized access' });
         }
     };
 };
